@@ -216,11 +216,12 @@ bot.on('message', (msg) => {
 
 
     if(msg.content.startsWith(prefix + "help")){
-        msg.reply("Comandos com argumentos\n" +
-            "> %mvp -a COD_MVP HORARIO_MORTE COORD_TUMULO\n" +
+        msg.author.send("Comandos do timer de MVP\n" +
             "> %mvp -p COD_MVP   Pesquisa informações de determinado Mvp\n" +
+            "> %mvp -a COD_MVP HORARIO_MORTE COORD_TUMULO\n" +
             "Comandos sem argumentos\n" +
             "> %resetar          Limpa a lista e todas as entradas dos Mvps\n" +
+            "AIUOAdoiaOjaj" +
             "> %horarios           Lista todos Mvps, informando Nome, Mapa, Horário de Respawn");
     }
 });
