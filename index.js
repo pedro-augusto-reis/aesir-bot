@@ -185,13 +185,13 @@ bot.on('message', (msg) => {
         // %mvp -a CODE_MVP HORARIO_MORTE COORDENADAS
         if(msg.content.startsWith(prefix) + "mvp" && args[1] === "-a"){
             if(!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[3])){
-                msg.channel.send("O horário deve ser válido e no formato HH:mm");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
+                msg.channel.send("O horário deve ser válido e no formato hh:mm");
+                msg.channel.send("%mvp -a hh:mm x/y Nome do MVP");
                 return;
             }
             if(!/^\d{1,4}\/\d{1,4}$/.test(args[4])){
-                msg.channel.send("Informar uma coordenada válida xxxx/yyyy");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
+                msg.channel.send("Informar uma coordenada válida xxx/yyy");
+                msg.channel.send("%mvp -a hh:mm x/y Nome do MVP");
             }
             listaMvp.get(args[2]).horaMinutoMorte = new Date("2020-01-01T"+args[3]+":00.000");
             listaMvp.get(args[2]).coordenadasTumulo = args[4];
@@ -216,13 +216,17 @@ bot.on('message', (msg) => {
 
 
     if(msg.content.startsWith(prefix + "help")){
-        msg.author.send("Comandos do timer de MVP\n" +
-            "> %mvp -p COD_MVP   Pesquisa informações de determinado Mvp\n" +
-            "> %mvp -a COD_MVP HORARIO_MORTE COORD_TUMULO\n" +
-            "Comandos sem argumentos\n" +
-            "> %resetar          Limpa a lista e todas as entradas dos Mvps\n" +
-            "AIUOAdoiaOjaj" +
-            "> %horarios           Lista todos Mvps, informando Nome, Mapa, Horário de Respawn");
+        msg.author.send( emoji( '709546703132426322' )+ " " +" **COMANDOS DO TIMER DE MVP**"+ " " + emoji( '709546703132426322' )+ " \n \n" +
+            "> **Pesquisa um MVP específico** \n"  +
+            "> %mvp -p *Nome do MVP* \n" + "> \n" +
+            "> **Adiciona um MVP à lista** \n" +
+            "> %mvp -a *hh:mm* *coordenadas (x/y)* *Nome do MVP*\n" + "> \n" +
+            "> **Limpa a lista de horários** \n" +
+            "> %resetar \n > \n" +
+            "> **Lista todos os MVPs que tem horário marcado** \n" +
+            "> %horarios   (informa Nome, Mapa, Horário de Respawn) \n > \n" +
+            "> **Mostra a lista de MVPs com aura verde** \n" +
+            "> %lista");
     }
 });
 
