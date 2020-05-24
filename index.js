@@ -5,7 +5,7 @@
 * ~~~ A zoeira não tem limites ~~~
 *
 * TODO:
-*  1. (FEITO, mas não está ideal) gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
+*  1. (FEITO no Help, mas não está ideal) gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
 *  2. gerar timer multithread para informar quando o respawn acontecer no channel;
 *  3. refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
 *  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
@@ -20,7 +20,7 @@ generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
-bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.XsqJ7A.5PsezFkRJFSBwuU5XYFWL9G_Lo8");
+bot.login("token");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
