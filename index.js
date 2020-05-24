@@ -4,7 +4,7 @@ const {Client, MessageAttachment, RichEmbed} = require('discord.js');
 
 // config bot
 const bot = new Client();
-bot.login("NzEzMDgzMTI4NzA0NTMyNTcw.XsmDAw.ODRzKCkXtYRfNuWB1-ktBA8pt5k");
+bot.login("");
 const prefix = '%';
 var listaMvp;
 
