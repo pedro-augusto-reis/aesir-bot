@@ -1,0 +1,22 @@
+##########################################################
+     :aesir:    **DICIONÁRIO DE COMANDOS**    :aesir:       
+##########################################################
+
+**Adicionar horário MVP** - parâmetros de entrada: hora morte, coordenadas, nome ou id
+
+> %mvp -a hh:mm x/y nome-mvp
+> %mvp -A hh:mm x/y código-mvp
+
+**Pesquisar MVP específico** - parâmetros de entrada: nome ou id
+            
+> %mvp -p nome-mvp
+> %mvp -P código-mvp
+
+**Comandos Gerais**
+
+> %resetar  Limpa a lista e todas as entradas dos Mvps
+> %horarios Lista todos Mvps, informando Nome, Mapa, Horário de Respawn
+> %aura     MVPs com aura verde
+
+**exemplos:** https://github.com/pedro-augusto-reis/aesir-bot/blob/master/README.md"
+##########################################################"

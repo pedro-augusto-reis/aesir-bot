@@ -17,11 +17,13 @@ listaInit = require('./domain/MvpTrackerLista');
 mvpTrackerUtil = require('./util/MvpTrackerUtil');
 generalUtil = require('./util/GeneralUtil');
 
+
 // config bot
 const bot = new Client();
-bot.login("");
+bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.XsaSVQ.hmLLh5C4ixTTyk8VvYd_Ud3Qcdk");
 const prefix = '%';
 var listaMvp;
+const fs = require('fs')
 
 // carregar bot
 bot.on('ready', () => {
@@ -176,23 +178,9 @@ bot.on('message', (msg) => {
 
     // help
     if (msg.content.startsWith(prefix + "help")) {
-        msg.author.send(
-            "\n##########################################################\n" +
-            "**                                                          DICIONÁRIO DE COMANDOS **\n" +
-            "##########################################################\n" +
-            "\n**Adicionar horário MVP** - parâmetros de entrada: hora morte, coordenadas, nome ou id\n" +
-            "> %mvp -a hh:mm x/y nome-mvp\n" +
-            "> %mvp -A hh:mm x/y código-mvp\n" +
-            "\n**Pesquisar MVP específico** - parâmetros de entrada: nome ou id\n" +
-            "> %mvp -p nome-mvp\n" +
-            "> %mvp -P código-mvp\n" +
-            "\n**Comandos Gerais**\n" +
-            "> %resetar        Limpa a lista e todas as entradas dos Mvps\n" +
-            "> %horarios      Lista todos Mvps, informando Nome, Mapa, Horário de Respawn\n" +
-            "> %aura             MVPs com aura verde\n" +
-            "\n**exemplos:** https://github.com/pedro-augusto-reis/aesir-bot/blob/master/README.md" +
-            "\n##########################################################"
-        );
+        fs.readFile ("./util/help.txt", "utf8", function(err, data){
+            msg.channel.send(data)
+        })
     }
 });
 
