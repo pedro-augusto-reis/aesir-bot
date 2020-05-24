@@ -43,15 +43,16 @@ bot.on('message', (msg) => {
     * *****************
     */
     if (msg.content.startsWith(prefix + "clear")) {
-
+       
         // comando clear
-        if (msg.member.roles.cache.has(365245891449192449)) {
+        if (msg.member.roles.cache.has('365245891449192449')){
             if (!args[1]) return msg.reply('Quantas mensagens, seu burro?');
             (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
         } else {
             msg.reply('tu é bobo, é?!')
         }
     }
+           
 
     /*
     *******************
@@ -76,7 +77,7 @@ bot.on('message', (msg) => {
     if (args.length > 1) {
 
         // pesquisar informações determinado MVP
-        // %mvp -p CODE_MVP
+        // %mvp -P CODE_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-P") {
             if (!listaMvp.get(args[2])) return;
             msg.channel.send("Nome MVP: " + listaMvp.get(args[2]).nomeMvp +
@@ -86,7 +87,7 @@ bot.on('message', (msg) => {
         }
 
         // pesquisar informações determinado MVP pelo Nome
-        // %mvp -P NOME_MVP
+        // %mvp -p NOME_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-p") {
             idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 2), listaMvp);
             if (!idMvp || idMvp === '') {
