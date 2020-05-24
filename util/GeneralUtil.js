@@ -1,5 +1,5 @@
 class GeneralUtil{
-    emoji(id) {
+    emojis(id) {
         return bot.emojis.cache.get(id).toString();
     }
 }

@@ -20,7 +20,7 @@ generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
-bot.login("");
+bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.XsqJ7A.5PsezFkRJFSBwuU5XYFWL9G_Lo8");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
@@ -179,21 +179,22 @@ bot.on('message', (msg) => {
     // help
     if (msg.content.startsWith(prefix + "help")) {
         fs.readFile ("./util/help.txt", "utf8", function(err, data){
-            msg.channel.send(data)
+            msg.author.send(data)
         })
     }
 });
 
-/*
-*******************
-* EASTER EGGS
-* *****************
-* */
-bot.on('message', msg => {
+    /*
+    *******************
+    * EASTER EGGS
+    * *****************
+    */
+
+bot.on('message', msg=>{
     if (msg.author.bot) return;
     if (msg.content === "safadinho") {
         const attachment1 = new MessageAttachment('./images/aesir_gifs/safadinho.gif');
-        msg.channel.send(attachment1);
+         msg.channel.send(attachment1);
     }
     if (msg.content === "acorda") {
         const attachment2 = new MessageAttachment('./images/aesir_gifs/acorda.gif');
@@ -207,22 +208,25 @@ bot.on('message', msg => {
         const attachment4 = new MessageAttachment('./images/aesir_gifs/sarrada.gif');
         msg.channel.send(attachment4);
     }
-    if (msg.content === "O que a aesir mais gosta?") {
-        msg.reply('Duwãfufaito!!!' + " " + new generalUtil().emoji("709561477324865603") + " " + new generalUtil().emoji("709555094227779624"));
+});
+
+bot.on('message', msg=>{
+    if (msg.content === "o que a aesir mais gosta?") {
+        msg.reply('Duwãfufaito!!!' + " " + new generalUtil().emoji( "709561477324865603" ) + " " + new generalUtil().emoji( "709555094227779624" ));
     }
-    if (msg.content === "Que preguiça") {
-        msg.reply('Vai farmar fdp!!' + " " + new generalUtil().emoji("709561478205931662"));
+    if (msg.content === "que preguiça") {
+        msg.reply('Vai farmar fdp!!' + " " + new generalUtil().emoji( "709561478205931662" ));
     }
-    if (msg.content === "Me beija") {
-        msg.reply('Awh!' + " " + new generalUtil().emoji("709544168594341928"));
+    if (msg.content === "me beija") {
+        msg.reply('Awh!' + " " + new generalUtil().emoji( "709544168594341928" ));
     }
     if (msg.content === "1%") {
-        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil().emoji("709561477165613114"));
+        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil().emoji( "709561477165613114" ));
     }
-    if (msg.content === "Quantas bsb gastou?") {
-        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil().emoji('709808464238477445'));
+    if (msg.content === "quantas bsb gastou?") {
+        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil().emoji( '709808464238477445' ));        
     }
     if (msg.content === "300") {
-        msg.reply('Um pouco mais...' + " " + new generalUtil().emoji('709808464414900324'));
+        msg.reply('Um pouco mais...' + " " + new generalUtil().emoji( '709808464414900324' ));
     }
-});
+});      
