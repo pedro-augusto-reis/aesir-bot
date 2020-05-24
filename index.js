@@ -1,74 +1,25 @@
+// imports
+cacete = require('./domain/listaMvp');
 const {Client, MessageAttachment, RichEmbed} = require('discord.js');
+
+// config bot
 const bot = new Client();
 bot.login("NzEzMDgzMTI4NzA0NTMyNTcw.XsmDAw.ODRzKCkXtYRfNuWB1-ktBA8pt5k");
-
-//Prefixo do bot
-const prefix = '%'
-mvp = require('./domain/mvp');
-cacete = require('./domain/listaMvp');
+const prefix = '%';
 var listaMvp;
 
-//Aviso de online
+//Aviso de bot online
 bot.on('ready', () => {
     listaMvp = new cacete().retornaLista();
     console.log('O pau está DURASSO!');
-})
+});
 
-//emojis no discord
-
-function emoji(id) {
-    return bot.emojis.cache.get(id).toString();
-}
-
-//Respostas em msg de texto
-bot.on('message', msg => {
-    if (msg.author.bot) return
-    if (msg.content === "O que a aesir mais gosta?") {
-        msg.reply('Duwãfufaito!!!' + " " + emoji("709561477324865603") + " " + emoji("709555094227779624"));
-    }
-    if (msg.content === "Que preguiça") {
-        msg.reply('Vai farmar fdp!!' + " " + emoji("709561478205931662"));
-    }
-    if (msg.content === "Me beija") {
-        msg.reply('Awh!' + " " + emoji("709544168594341928"));
-    }
-    if (msg.content === "1%") {
-        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + emoji("709561477165613114"));
-    }
-    if (msg.content === "Quantas bsb gastou?") {
-        msg.reply('Fala 300... Fala 300...' + " " + emoji('709808464238477445'));
-    }
-    if (msg.content === "300") {
-        msg.reply('Um pouco mais...' + " " + emoji('709808464414900324'));
-    }
-})
-
-//Comando clear
-bot.on('message', msg => {
-    if (msg.author.bot) return
-    let args = msg.content.substring(prefix.length).split(' ')
-    if (msg.member.roles.cache.has('365245891449192449')) {
-        if (!msg.content.startsWith(prefix)) return
-        switch (args[0]) {
-            case "clear" :
-                if (!args[1]) return msg.reply('Quantas mensagens, seu burro?')
-                if (args[1] > 20) {
-                    msg.channel.bulkDelete(20)
-                } else {
-                    msg.channel.bulkDelete(args[1])
-                }
-        }
-    } else {
-        switch (args[0]) {
-            case "clear" :
-                msg.reply('tu é bobo, é?!')
-        }
-        ;
-    }
-})
-
-
-//Respostas com imagem ou gif
+/*
+*******************
+* EASTER EGGS
+* *****************
+* */
+// respostas com imagem ou gif
 bot.on('message', msg => {
     if (msg.author.bot) return
     let args = msg.content.substring(prefix.length).split(' ')
@@ -91,15 +42,70 @@ bot.on('message', msg => {
             msg.channel.send(attachment4);
             break;
     }
-})
+});
 
-//Lista de MVPs de Aura Verde
+bot.on('message', msg => {
+    if (msg.author.bot) return
+    if (msg.content === "O que a aesir mais gosta?") {
+        msg.reply('Duwãfufaito!!!' + " " + emoji("709561477324865603") + " " + emoji("709555094227779624"));
+    }
+    if (msg.content === "Que preguiça") {
+        msg.reply('Vai farmar fdp!!' + " " + emoji("709561478205931662"));
+    }
+    if (msg.content === "Me beija") {
+        msg.reply('Awh!' + " " + emoji("709544168594341928"));
+    }
+    if (msg.content === "1%") {
+        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + emoji("709561477165613114"));
+    }
+    if (msg.content === "Quantas bsb gastou?") {
+        msg.reply('Fala 300... Fala 300...' + " " + emoji('709808464238477445'));
+    }
+    if (msg.content === "300") {
+        msg.reply('Um pouco mais...' + " " + emoji('709808464414900324'));
+    }
+});
+
+/*
+*******************
+* COMANDO CLEAR
+* *****************
+* */
+bot.on('message', msg => {
+    if (msg.author.bot) return;
+    if (!msg.content.startsWith(prefix) + "clear") return;
+    let args = msg.content.substring(prefix.length).split(' ')
+    if (msg.member.roles.cache.has('365245891449192449')) {
+        if (!msg.content.startsWith(prefix)) return
+        switch (args[0]) {
+            case "clear" :
+                if (!args[1]) return msg.reply('Quantas mensagens, seu burro?')
+                if (args[1] > 20) {
+                    msg.channel.bulkDelete(20)
+                } else {
+                    msg.channel.bulkDelete(args[1])
+                }
+        }
+    } else {
+        switch (args[0]) {
+            case "clear" :
+                msg.reply('tu é bobo, é?!')
+        }
+    }
+});
+
+
+/*
+****************************
+* LISTA MVPs COM AURA VERDE
+* **************************
+* */
 bot.on('message', msg => {
     if (msg.author.bot) return
     let args = msg.content.substring(prefix.length).split(' ')
     if (!msg.content.startsWith(prefix)) return
     switch (args[0]) {
-        case "lista" :
+        case "aura" :
             msg.channel.send(" **MVPS de Aura Verde** " +
                 "\n ° Amon Ra - Pyramid F6 (entrada no meio do mapa)" +
                 "\n ° Vesper - Juperos 3 (Quest)" +
@@ -117,9 +123,13 @@ bot.on('message', msg => {
                 "\n ° R48-85-BESTIA - Rufus")
             break;
     }
-})
+});
 
-//Timer de MVP
+/*
+*******************
+* MVP TIME TRACKER
+* *****************
+* */
 bot.on('message', (msg) => {
 
     // bot ignora mensagens dele mesmo e não aceita outros prefixos
@@ -143,7 +153,7 @@ bot.on('message', (msg) => {
         // pesquisar informações determinado MVP
         // %mvp -p CODE_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-P") {
-            if(!listaMvp.get(args[2])){
+            if (!listaMvp.get(args[2])) {
 
             }
             msg.channel.send("Nome MVP: " + listaMvp.get(args[2]).nomeMvp +
@@ -160,7 +170,6 @@ bot.on('message', (msg) => {
                 msg.channel.send("Encontrei nada não com esse nome.");
                 return;
             }
-            console.log(listaMvp.get(idMvp));
             msg.channel.send("Nome MVP: " + listaMvp.get(idMvp).nomeMvp +
                 "\nMapa: " + listaMvp.get(idMvp).mapa +
                 "\nRespawn: " + calcularRespawn(listaMvp.get(idMvp).horaMinutoMorte, listaMvp.get(idMvp).tempoDeRespawn) +
@@ -188,13 +197,11 @@ bot.on('message', (msg) => {
         // %mvp -a HORARIO_MORTE COORDENADAS NOME_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-a") {
             if (!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[2])) {
-                msg.channel.send("O horário deve ser válido e no formato HH:mm");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
+                msg.channel.send("O horário deve ser válido e no formato hh:mm");
                 return;
             }
             if (!/^\d{1,4}\/\d{1,4}$/.test(args[3])) {
-                msg.channel.send("Informar uma coordenada válida xxxx/yyyy");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
+                msg.channel.send("A coordenada deve ser válida e no formato x/y");
             }
             idMvp = pesquisarMvpPorNome(construirNomeMvp(args, 4));
             if (!idMvp || idMvp === '') {
@@ -225,16 +232,21 @@ bot.on('message', (msg) => {
 
     // help
     if (msg.content.startsWith(prefix + "help")) {
-        msg.reply(
-            "\nAdicionar horário MVP\n" +
-            "> %mvp -a HH:mm xxxx/yyyy NOME_MVP\n" +
-            "> %mvp -A HH:mm xxxx/yyyy COD_MVP\n" +
-            "\nPesquisar MVP específico\n" +
-            "> %mvp -p NOME_MVP\n" +
-            "> %mvp -P COD_MVP\n" +
-            "\nComandos Gerais\n" +
-            "> %resetar      Limpa a lista e todas as entradas dos Mvps\n" +
-            "> %horarios     Lista todos Mvps, informando Nome, Mapa, Horário de Respawn"
+        msg.author.send(
+            "\n##########################################################\n" +
+            "**                                                          DICIONÁRIO DE COMANDOS **\n" +
+            "##########################################################\n" +
+            "\n**Adicionar horário MVP** - parâmetros de entrada: hora morte, coordenadas, nome ou id\n" +
+            "> %mvp -a hh:mm x/y nome-mvp\n" +
+            "> %mvp -A hh:mm x/y código-mvp\n" +
+            "\n**Pesquisar MVP específico** - parâmetros de entrada: nome ou id\n" +
+            "> %mvp -p nome-mvp\n" +
+            "> %mvp -P código-mvp\n" +
+            "\n**Comandos Gerais**\n" +
+            "> %resetar        Limpa a lista e todas as entradas dos Mvps\n" +
+            "> %horarios      Lista todos Mvps, informando Nome, Mapa, Horário de Respawn\n" +
+            "> %aura             MVPs com aura verde" +
+            "\n\n##########################################################"
         );
     }
 });
@@ -242,6 +254,12 @@ bot.on('message', (msg) => {
 /* ***************************************/
 // UTIL
 /* ***************************************/
+
+//emojis no discord
+function emoji(id) {
+    return bot.emojis.cache.get(id).toString();
+}
+
 function calcularRespawn(horaMorte, respawn) {
     if (!horaMorte) {
         return null;
