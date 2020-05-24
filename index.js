@@ -9,6 +9,7 @@
 *  2. Gerar timer multithread para informar quando o respawn acontecer no channel;
 *  3. Refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
 *  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
+*  4 . informar quando não há entrada na chamada %horarios;
 * */
 
 // imports
@@ -20,7 +21,7 @@ generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
-bot.login("token");
+bot.login("TOKEN_AQUI");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
@@ -212,21 +213,21 @@ bot.on('message', msg=>{
 
 bot.on('message', msg=>{
     if (msg.content === "o que a aesir mais gosta?") {
-        msg.reply('Duwãfufaito!!!' + " " + new generalUtil().emoji( "709561477324865603" ) + " " + new generalUtil().emoji( "709555094227779624" ));
+        msg.reply('Duwãfufaito!!!' + " " + new generalUtil(bot).emoji( "709561477324865603" ) + " " + new generalUtil(bot).emoji( "709555094227779624" ));
     }
     if (msg.content === "que preguiça") {
-        msg.reply('Vai farmar fdp!!' + " " + new generalUtil().emoji( "709561478205931662" ));
+        msg.reply('Vai farmar fdp!!' + " " + new generalUtil(bot).emoji( "709561478205931662" ));
     }
     if (msg.content === "me beija") {
-        msg.reply('Awh!' + " " + new generalUtil().emoji( "709544168594341928" ));
+        msg.reply('Awh!' + " " + new generalUtil(bot).emojis( "709544168594341928" ));
     }
     if (msg.content === "1%") {
-        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil().emoji( "709561477165613114" ));
+        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil(bot).emoji( "709561477165613114" ));
     }
     if (msg.content === "quantas bsb gastou?") {
-        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil().emoji( '709808464238477445' ));        
+        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil(bot).emoji( '709808464238477445' ));
     }
     if (msg.content === "300") {
-        msg.reply('Um pouco mais...' + " " + new generalUtil().emoji( '709808464414900324' ));
+        msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji( '709808464414900324' ));
     }
 });      
