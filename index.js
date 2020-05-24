@@ -9,7 +9,6 @@
 *  2. gerar timer multithread para informar quando o respawn acontecer no channel;
 *  3. refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
 *  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
-*  4. avaliar a estrutura implementada no comando clear.
 * */
 
 // imports
@@ -24,50 +23,42 @@ bot.login("");
 const prefix = '%';
 var listaMvp;
 
-// aviso de bot online
+// carregar bot
 bot.on('ready', () => {
     listaMvp = new listaInit().retornaLista();
     console.log('O pau está DURASSO!');
 });
 
-/*
-*******************
-* COMANDO CLEAR
-* *****************
-* */
-bot.on('message', msg => {
-    if (msg.author.bot) return;
-    if (!msg.content.startsWith(prefix) + "clear") return;
-    let args = msg.content.substring(prefix.length).split(' ')
-    if (msg.member.roles.cache.has('365245891449192449')) {
-        if (!msg.content.startsWith(prefix)) return
-        switch (args[0]) {
-            case "clear" :
-                if (!args[1]) return msg.reply('Quantas mensagens, seu burro?')
-                if (args[1] > 20) {
-                    msg.channel.bulkDelete(20)
-                } else {
-                    msg.channel.bulkDelete(args[1])
-                }
-        }
-    } else {
-        switch (args[0]) {
-            case "clear" :
-                msg.reply('tu é bobo, é?!')
-        }
-    }
-});
-
-/*
-*******************
-* MVP TRACKER
-* *****************
-* */
+// comandos bot
 bot.on('message', (msg) => {
 
-    // bot ignora mensagens dele mesmo e não aceita outros prefixos
     if (msg.author.bot) return;
     if (!msg.content.startsWith(prefix)) return;
+
+    const args = msg.content.slice(prefix.length).split(' ');
+
+    /*
+    *******************
+    * CLEAR
+    * *****************
+    */
+    if (msg.content.startsWith(prefix + "clear")) {
+
+        // comando clear
+        if (msg.member.roles.cache.has(365245891449192449)) {
+            if (!args[1]) return msg.reply('Quantas mensagens, seu burro?');
+            (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
+        } else {
+            msg.reply('tu é bobo, é?!')
+        }
+    }
+
+    /*
+    *******************
+    * MVP TRACKER
+    * *****************
+    */
+
     // argumentos
     /*
     * exemplo
@@ -78,7 +69,6 @@ bot.on('message', (msg) => {
     * args[3] = HORARIO_MORTE
     * args[4] = COORDENADAS
     * */
-    const args = msg.content.slice(prefix.length).split(' ');
 
     /*
     * comandos com argumentos
@@ -165,7 +155,7 @@ bot.on('message', (msg) => {
         }, listaMvp);
     }
 
-    if(msg.content.startsWith(prefix + "aura")){
+    if (msg.content.startsWith(prefix + "aura")) {
         msg.channel.send(" **MVPS de Aura Verde** " +
             "\n ° Amon Ra - Pyramid F6 (entrada no meio do mapa)" +
             "\n ° Vesper - Juperos 3 (Quest)" +
@@ -198,8 +188,9 @@ bot.on('message', (msg) => {
             "\n**Comandos Gerais**\n" +
             "> %resetar        Limpa a lista e todas as entradas dos Mvps\n" +
             "> %horarios      Lista todos Mvps, informando Nome, Mapa, Horário de Respawn\n" +
-            "> %aura             MVPs com aura verde" +
-            "\n\n##########################################################"
+            "> %aura             MVPs com aura verde\n" +
+            "\n**exemplos:** https://github.com/pedro-augusto-reis/aesir-bot/blob/master/README.md" +
+            "\n##########################################################"
         );
     }
 });
