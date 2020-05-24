@@ -6,10 +6,9 @@
 *
 * TODO:
 *  1. (FEITO no Help, mas não está ideal) gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
-*  2. gerar timer multithread para informar quando o respawn acontecer no channel;
-*  3. refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
-*  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
-*  4 . informar quando não há entrada na chamada %horarios;
+*  2. Gerar timer multithread para informar quando o respawn acontecer no channel;
+*  3. Refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
+*  3.1. O arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
 * */
 
 // imports
@@ -21,7 +20,7 @@ generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
-bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.Xsqr_g.hjPpO8Nf46Cqc_DmLTebGhqvpoI");
+bot.login("Insira o Token aqui");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
@@ -149,14 +148,18 @@ bot.on('message', (msg) => {
         msg.channel.send("Lista resetada");
     }
 
-    // lista todas as entradas
+    // lista todas as entradas ( Comando %horario )
     if (msg.content.startsWith(prefix + "horarios")) {
+        let contagem = 0;
+
         listaMvp.forEach(function (value, key) {
             if (value.horaMinutoMorte) {
+                contagem++;
                 msg.channel.send(value.nomeMvp + "\n" +
                     "> Mapa: " + value.mapa + ", Respawn: " + new mvpTrackerUtil().calcularRespawn(value.horaMinutoMorte, value.tempoDeRespawn));
             }
         }, listaMvp);
+        if (contagem === 0) msg.channel.send("Não existem horários cadastrados.");
     }
 
     if (msg.content.startsWith(prefix + "aura")) {
