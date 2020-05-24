@@ -1,6 +1,22 @@
+/*
+* by: Clan AesirBR
+* Developers: Tutz, Yaerius
+* v. 1.0
+* ~~~ A zoeira não tem limites ~~~
+*
+* TODO:
+*  1. gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
+*  2. gerar timer multithread para informar quando o respawn acontecer no channel;
+*  3. refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
+*  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
+*  4. avaliar a estrutura implementada no comando clear.
+* */
+
 // imports
-cacete = require('./domain/listaMvp');
 const {Client, MessageAttachment, RichEmbed} = require('discord.js');
+listaInit = require('./domain/MvpTrackerLista');
+mvpTrackerUtil = require('./util/MvpTrackerUtil');
+generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
@@ -8,62 +24,10 @@ bot.login("");
 const prefix = '%';
 var listaMvp;
 
-//Aviso de bot online
+// aviso de bot online
 bot.on('ready', () => {
-    listaMvp = new cacete().retornaLista();
+    listaMvp = new listaInit().retornaLista();
     console.log('O pau está DURASSO!');
-});
-
-/*
-*******************
-* EASTER EGGS
-* *****************
-* */
-// respostas com imagem ou gif
-bot.on('message', msg => {
-    if (msg.author.bot) return
-    let args = msg.content.substring(prefix.length).split(' ')
-    if (!msg.content.startsWith(prefix)) return
-    switch (args[0]) {
-        case 'safadinho' :
-            const attachment1 = new MessageAttachment('./gifs/safadinho.gif');
-            msg.channel.send(attachment1);
-            break;
-        case 'acorda' :
-            const attachment2 = new MessageAttachment('./gifs/acorda.gif');
-            msg.channel.send(attachment2);
-            break;
-        case 'macaco' :
-            const attachment3 = new MessageAttachment('./gifs/macaco.gif');
-            msg.channel.send(attachment3);
-            break;
-        case 'sarrada' :
-            const attachment4 = new MessageAttachment('./gifs/sarrada.gif');
-            msg.channel.send(attachment4);
-            break;
-    }
-});
-
-bot.on('message', msg => {
-    if (msg.author.bot) return
-    if (msg.content === "O que a aesir mais gosta?") {
-        msg.reply('Duwãfufaito!!!' + " " + emoji("709561477324865603") + " " + emoji("709555094227779624"));
-    }
-    if (msg.content === "Que preguiça") {
-        msg.reply('Vai farmar fdp!!' + " " + emoji("709561478205931662"));
-    }
-    if (msg.content === "Me beija") {
-        msg.reply('Awh!' + " " + emoji("709544168594341928"));
-    }
-    if (msg.content === "1%") {
-        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + emoji("709561477165613114"));
-    }
-    if (msg.content === "Quantas bsb gastou?") {
-        msg.reply('Fala 300... Fala 300...' + " " + emoji('709808464238477445'));
-    }
-    if (msg.content === "300") {
-        msg.reply('Um pouco mais...' + " " + emoji('709808464414900324'));
-    }
 });
 
 /*
@@ -94,47 +58,16 @@ bot.on('message', msg => {
     }
 });
 
-
-/*
-****************************
-* LISTA MVPs COM AURA VERDE
-* **************************
-* */
-bot.on('message', msg => {
-    if (msg.author.bot) return
-    let args = msg.content.substring(prefix.length).split(' ')
-    if (!msg.content.startsWith(prefix)) return
-    switch (args[0]) {
-        case "aura" :
-            msg.channel.send(" **MVPS de Aura Verde** " +
-                "\n ° Amon Ra - Pyramid F6 (entrada no meio do mapa)" +
-                "\n ° Vesper - Juperos 3 (Quest)" +
-                "\n ° Atroce - Rachel desce| Rachel desce esq| Ice dun desce desce| Ice dun desce desce direita" +
-                "\n ° Bacsojin - Louyang dun 3" +
-                "\n ° Boitata - Brasilis dun 2" +
-                "\n ° Doppelganger - Gef dun 03" +
-                "\n ° Dracula - Gef dun 02" +
-                "\n ° Drake - Sunken Ship 2" +
-                "\n ° Venomous Chimera - Instances Heart Hunter War Base" +
-                "\n ° Eddga - Payon Direita Desce Direita" +
-                "\n ° Evil Snake Lord - Goryun Dun 3" +
-                "\n ° Baphomet - Hidden Dun 3" +
-                "\n ° Dark Lord - GH chyard" +
-                "\n ° R48-85-BESTIA - Rufus")
-            break;
-    }
-});
-
 /*
 *******************
-* MVP TIME TRACKER
+* MVP TRACKER
 * *****************
 * */
 bot.on('message', (msg) => {
 
     // bot ignora mensagens dele mesmo e não aceita outros prefixos
     if (msg.author.bot) return;
-    if (!msg.content.startsWith(prefix)) return
+    if (!msg.content.startsWith(prefix)) return;
     // argumentos
     /*
     * exemplo
@@ -147,32 +80,32 @@ bot.on('message', (msg) => {
     * */
     const args = msg.content.slice(prefix.length).split(' ');
 
-    // comandos com argumentos
+    /*
+    * comandos com argumentos
+    */
     if (args.length > 1) {
 
         // pesquisar informações determinado MVP
         // %mvp -p CODE_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-P") {
-            if (!listaMvp.get(args[2])) {
-
-            }
+            if (!listaMvp.get(args[2])) return;
             msg.channel.send("Nome MVP: " + listaMvp.get(args[2]).nomeMvp +
                 "\nMapa: " + listaMvp.get(args[2]).mapa +
-                "\nRespawn: " + calcularRespawn(listaMvp.get(args[2]).horaMinutoMorte, listaMvp.get(args[2]).tempoDeRespawn) +
+                "\nRespawn: " + new mvpTrackerUtil().calcularRespawn(listaMvp.get(args[2]).horaMinutoMorte, listaMvp.get(args[2]).tempoDeRespawn) +
                 "\nCoordenadas: " + listaMvp.get(args[2]).coordenadasTumulo, listaMvp.get(args[2]).imagem);
         }
 
         // pesquisar informações determinado MVP pelo Nome
         // %mvp -P NOME_MVP
         if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-p") {
-            idMvp = pesquisarMvpPorNome(construirNomeMvp(args, 2));
+            idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 2), listaMvp);
             if (!idMvp || idMvp === '') {
                 msg.channel.send("Encontrei nada não com esse nome.");
                 return;
             }
             msg.channel.send("Nome MVP: " + listaMvp.get(idMvp).nomeMvp +
                 "\nMapa: " + listaMvp.get(idMvp).mapa +
-                "\nRespawn: " + calcularRespawn(listaMvp.get(idMvp).horaMinutoMorte, listaMvp.get(idMvp).tempoDeRespawn) +
+                "\nRespawn: " + new mvpTrackerUtil().calcularRespawn(listaMvp.get(idMvp).horaMinutoMorte, listaMvp.get(idMvp).tempoDeRespawn) +
                 "\nCoordenadas: " + listaMvp.get(idMvp).coordenadasTumulo, listaMvp.get(idMvp).imagem);
         }
 
@@ -203,7 +136,7 @@ bot.on('message', (msg) => {
             if (!/^\d{1,4}\/\d{1,4}$/.test(args[3])) {
                 msg.channel.send("A coordenada deve ser válida e no formato x/y");
             }
-            idMvp = pesquisarMvpPorNome(construirNomeMvp(args, 4));
+            idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 4), listaMvp);
             if (!idMvp || idMvp === '') {
                 msg.channel.send("Encontrei nada não com esse nome.");
                 return;
@@ -214,7 +147,9 @@ bot.on('message', (msg) => {
         }
     }
 
-    // comandos sem argumentos
+    /*
+    * comandos sem argumentos
+    */
     if (msg.content.startsWith(prefix + "resetar")) {
         listaMvp = new cacete().retornaLista();
         msg.channel.send("Lista resetada");
@@ -225,9 +160,27 @@ bot.on('message', (msg) => {
         listaMvp.forEach(function (value, key) {
             if (value.horaMinutoMorte) {
                 msg.channel.send(value.nomeMvp + "\n" +
-                    "> Mapa: " + value.mapa + ", Respawn: " + calcularRespawn(value.horaMinutoMorte, value.tempoDeRespawn));
+                    "> Mapa: " + value.mapa + ", Respawn: " + new mvpTrackerUtil().calcularRespawn(value.horaMinutoMorte, value.tempoDeRespawn));
             }
         }, listaMvp);
+    }
+
+    if(msg.content.startsWith(prefix + "aura")){
+        msg.channel.send(" **MVPS de Aura Verde** " +
+            "\n ° Amon Ra - Pyramid F6 (entrada no meio do mapa)" +
+            "\n ° Vesper - Juperos 3 (Quest)" +
+            "\n ° Atroce - Rachel desce| Rachel desce esq| Ice dun desce desce| Ice dun desce desce direita" +
+            "\n ° Bacsojin - Louyang dun 3" +
+            "\n ° Boitata - Brasilis dun 2" +
+            "\n ° Doppelganger - Gef dun 03" +
+            "\n ° Dracula - Gef dun 02" +
+            "\n ° Drake - Sunken Ship 2" +
+            "\n ° Venomous Chimera - Instances Heart Hunter War Base" +
+            "\n ° Eddga - Payon Direita Desce Direita" +
+            "\n ° Evil Snake Lord - Goryun Dun 3" +
+            "\n ° Baphomet - Hidden Dun 3" +
+            "\n ° Dark Lord - GH chyard" +
+            "\n ° R48-85-BESTIA - Rufus");
     }
 
     // help
@@ -251,53 +204,45 @@ bot.on('message', (msg) => {
     }
 });
 
-/* ***************************************/
-// UTIL
-/* ***************************************/
-
-//emojis no discord
-function emoji(id) {
-    return bot.emojis.cache.get(id).toString();
-}
-
-function calcularRespawn(horaMorte, respawn) {
-    if (!horaMorte) {
-        return null;
+/*
+*******************
+* EASTER EGGS
+* *****************
+* */
+bot.on('message', msg => {
+    if (msg.author.bot) return;
+    if (msg.content === "safadinho") {
+        const attachment1 = new MessageAttachment('./images/aesir_gifs/safadinho.gif');
+        msg.channel.send(attachment1);
     }
-    let horaMorteTemp = new Date(horaMorte);
-
-    horaMorteTemp.setMinutes(horaMorteTemp.getMinutes() + respawn);
-
-    hora = horaMorteTemp.getHours();
-    minuto = horaMorteTemp.getMinutes();
-
-    if (horaMorteTemp.getHours() < 10) hora = "0" + hora;
-    if (horaMorteTemp.getMinutes() < 10) minuto = "0" + minuto;
-
-    return hora + ":" + minuto;
-}
-
-function construirNomeMvp(args, posicaoInicialNome) {
-    let nomeMvp = '';
-    for (i = posicaoInicialNome; i < args.length; i++) {
-        nomeMvp = nomeMvp + args[i];
-        nomeMvp = nomeMvp + ' ';
+    if (msg.content === "acorda") {
+        const attachment2 = new MessageAttachment('./images/aesir_gifs/acorda.gif');
+        msg.channel.send(attachment2);
     }
-    nomeMvp = nomeMvp.trim();
-    return nomeMvp;
-}
-
-function pesquisarMvpPorNome(nomeMvp) {
-    chave = 0;
-    if (!nomeMvp || nomeMvp === "") {
-        return chave;
+    if (msg.content === "macaco") {
+        const attachment3 = new MessageAttachment('./images/aesir_gifs/macaco.gif');
+        msg.channel.send(attachment3);
     }
-    nomeMvp = nomeMvp.trim().replace(/\s/g, '').toLowerCase();
-
-    listaMvp.forEach(function (value, key) {
-        if (value.nomeMvp.trim().replace(/\s/g, '').toLowerCase().includes(nomeMvp)) {
-            chave = key;
-        }
-    }, listaMvp);
-    return chave;
-}
+    if (msg.content === "sarrada") {
+        const attachment4 = new MessageAttachment('./images/aesir_gifs/sarrada.gif');
+        msg.channel.send(attachment4);
+    }
+    if (msg.content === "O que a aesir mais gosta?") {
+        msg.reply('Duwãfufaito!!!' + " " + new generalUtil().emoji("709561477324865603") + " " + new generalUtil().emoji("709555094227779624"));
+    }
+    if (msg.content === "Que preguiça") {
+        msg.reply('Vai farmar fdp!!' + " " + new generalUtil().emoji("709561478205931662"));
+    }
+    if (msg.content === "Me beija") {
+        msg.reply('Awh!' + " " + new generalUtil().emoji("709544168594341928"));
+    }
+    if (msg.content === "1%") {
+        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil().emoji("709561477165613114"));
+    }
+    if (msg.content === "Quantas bsb gastou?") {
+        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil().emoji('709808464238477445'));
+    }
+    if (msg.content === "300") {
+        msg.reply('Um pouco mais...' + " " + new generalUtil().emoji('709808464414900324'));
+    }
+});
