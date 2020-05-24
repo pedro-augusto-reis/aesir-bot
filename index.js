@@ -20,7 +20,7 @@ generalUtil = require('./util/GeneralUtil');
 
 // config bot
 const bot = new Client();
-bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.XsaSVQ.hmLLh5C4ixTTyk8VvYd_Ud3Qcdk");
+bot.login("");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
