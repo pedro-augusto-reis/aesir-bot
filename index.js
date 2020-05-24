@@ -5,7 +5,7 @@
 * ~~~ A zoeira não tem limites ~~~
 *
 * TODO:
-*  1. gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
+*  1. (FEITO, mas não está ideal) gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
 *  2. gerar timer multithread para informar quando o respawn acontecer no channel;
 *  3. refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
 *  3.1. o arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
