@@ -266,7 +266,7 @@ const exampleEmbed = {
         },
     ],
 	image: {
-        url: 'attachment://omg.gif',
+        url: 'attachment://help.gif',
     },
 	footer: {
         text: 'Tutz e Yaerius',
@@ -283,8 +283,8 @@ bot.on('message', msg => {
                 name: 'MVP.png'
             },
             {
-                attachment: 'images/ragnarok_gifs/Omg.gif',
-                name: 'omg.gif'
+                attachment: 'images/ragnarok_gifs/help.gif',
+                name: 'help.gif'
             }]
         });
     }
