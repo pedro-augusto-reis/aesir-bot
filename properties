@@ -1,1 +1,5 @@
 bot.token =
+bot.id.canal.monitoramento.mvp = '713082443787403269'
+bot.time.checker.intervalo = 1
+bot.time.checker.limpar.mvp = 5
+bot.id.role.odin = '365245891449192449'

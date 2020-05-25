@@ -1,6 +1,6 @@
 class MvpTrackerUtil{
 
-    calcularRespawn(horaMorte, respawn) {
+    calcularRespawn(horaMorte, respawn){
         if (!horaMorte) {
             return null;
         }
@@ -8,6 +8,13 @@ class MvpTrackerUtil{
 
         horaMorteTemp.setMinutes(horaMorteTemp.getMinutes() + respawn);
 
+        return horaMorteTemp;
+    }
+
+    converterHoraParaString(horaMorteTemp){
+        if(!horaMorteTemp){
+            return null;
+        }
         let hora = horaMorteTemp.getHours();
         let minuto = horaMorteTemp.getMinutes();
 

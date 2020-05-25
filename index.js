@@ -5,19 +5,20 @@
 * ~~~ A zoeira não tem limites ~~~
 *
 * TODO:
-*  1. (FEITO no Help, mas não está ideal) gerar arquivos com mensagens e remover do index.js (por exemplo as informções do comando %help);
-*  2. Gerar timer multithread para informar quando o respawn acontecer no channel;
-*  3. Refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
-*  3.1. O arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
+*  1. Gerar timer multithread para informar quando o respawn acontecer no channel;
+*  2. Refatorar as entradas para uma camada de serviço, separando o "controlador" de entrada da funcionalidade;
+*  2.1. O arquivo index.js irá possuir apenas os camandos de entradas, dentro deverá ter apenas a chamada de uma função, implementando um facade;
+*  3. Configurar o comando %resetar para ser executado apenas por Odin;
 * */
 
 // imports
-const {Client, MessageAttachment, RichEmbed} = require('discord.js');
-listaInit = require('./domain/MvpTrackerLista');
-mvpTrackerUtil = require('./util/MvpTrackerUtil');
-generalUtil = require('./util/GeneralUtil');
-msgUtil = require('./util/MsgUtil');
-var propertiesReader = require('properties-reader');
+const {Client, MessageAttachment} = require('discord.js');
+const listaMvpObject = require('./domain/MvpTrackerLista');
+const mvpTrackerUtil = require('./util/MvpTrackerUtil');
+const generalUtil = require('./util/GeneralUtil');
+const msgUtil = require('./util/MsgUtil');
+const propertiesReader = require('properties-reader');
+const timeChecker = require('./service/TimeChecker')
 
 // carregar arquivos propriedades
 var properties = propertiesReader('properties');
@@ -26,16 +27,21 @@ var properties = propertiesReader('properties');
 const bot = new Client();
 bot.login(properties.get('bot.token'));
 const prefix = '%';
+
+// lista MVPs
 var listaMvp;
-const fs = require('fs')
 
 // carregar bot
 bot.on('ready', () => {
-    listaMvp = new listaInit().retornaLista();
+    listaMvp = new listaMvpObject();
+    listaMvp.gerarLista();
+    exports.listaMvp = listaMvp;
+
+    new timeChecker().mvpRespawnChecker(bot);
+
     console.log('O pau está DURASSO!');
 });
 
-// comandos bot
 bot.on('message', (msg) => {
 
     if (msg.author.bot) return;
@@ -43,15 +49,12 @@ bot.on('message', (msg) => {
 
     const args = msg.content.slice(prefix.length).split(' ');
 
-    /*
-    *******************
+    /* *******************
     * CLEAR
-    * *****************
-    */
+    * ***************** */
     if (msg.content.startsWith(prefix + "clear")) {
-
         // comando clear
-        if (msg.member.roles.cache.has('365245891449192449')) {
+        if (msg.member.roles.cache.has(properties.get('bot.id.role.odin').replace(/'/g, '').trim())) {
             if (!args[1]) return msg.reply('Quantas mensagens, seu burro?');
             (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
         } else {
@@ -60,86 +63,74 @@ bot.on('message', (msg) => {
     }
 
 
-    /*
-    *******************
+    /* ****************
     * MVP TRACKER
-    * *****************
-    */
-
-    // argumentos
-    /*
-    * exemplo
-    * %mvp -A CODE_MVP HORARIO_MORTE COORDENADAS
-    * args[0] = mvp
-    * args[1] = -a
-    * args[2] = CODE_MVP
-    * args[3] = HORARIO_MORTE
-    * args[4] = COORDENADAS
-    * */
-
-    /*
+    * ****************/
+    /* **********************
     * comandos com argumentos
-    */
+    *********************** */
     if (args.length > 1) {
 
-        // pesquisar informações determinado MVP
-        // %mvp -P CODE_MVP
-        if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-P") {
-            if (!listaMvp.get(args[2])) return;
-            msg.channel.send("Nome MVP: " + listaMvp.get(args[2]).nomeMvp +
-                "\nMapa: " + listaMvp.get(args[2]).mapa +
-                "\nRespawn: " + new mvpTrackerUtil().calcularRespawn(listaMvp.get(args[2]).horaMinutoMorte, listaMvp.get(args[2]).tempoDeRespawn) +
-                "\nCoordenadas: " + listaMvp.get(args[2]).coordenadasTumulo, listaMvp.get(args[2]).imagem);
-        }
-
-        // pesquisar informações determinado MVP pelo Nome
-        // %mvp -p NOME_MVP
-        if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-p") {
-            idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 2), listaMvp);
-            if (!idMvp || idMvp === '') {
-                msg.channel.send("Encontrei nada não com esse nome.");
+        // pesquisar mvp por id ou nome
+        if(msg.content.startsWith(prefix + "mvp") && (args[1] === "-p" || args[1] === "-P")){
+            let idMvp;
+            if(!args[2]){
+                msg.channel.send("Informar uma ID ou nome do MVP");
                 return;
             }
-            msg.channel.send("Nome MVP: " + listaMvp.get(idMvp).nomeMvp +
-                "\nMapa: " + listaMvp.get(idMvp).mapa +
-                "\nRespawn: " + new mvpTrackerUtil().calcularRespawn(listaMvp.get(idMvp).horaMinutoMorte, listaMvp.get(idMvp).tempoDeRespawn) +
-                "\nCoordenadas: " + listaMvp.get(idMvp).coordenadasTumulo, listaMvp.get(idMvp).imagem);
+            if(args[1] === "-P"){
+                idMvp = args[2];
+                if(!listaMvp.getLista().get(idMvp)){
+                    msg.channel.send("MVP não encontrado na base");
+                    return;
+                }
+            }
+            if(args[1] === "-p"){
+                idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 2), listaMvp.getLista());
+                if (!idMvp || idMvp === '') {
+                    msg.channel.send("MVP não encontrado na base");
+                    return;
+                }
+            }
+
+            let horaRespawnNaoFormatada = new mvpTrackerUtil().calcularRespawn(listaMvp.getLista().get(idMvp).horaMinutoMorte, listaMvp.getLista().get(idMvp).tempoDeRespawn);
+            msg.channel.send("Nome MVP: " + listaMvp.getLista().get(idMvp).nomeMvp +
+                "\nMapa: " + listaMvp.getLista().get(idMvp).mapa +
+                "\nRespawn: " + new mvpTrackerUtil().converterHoraParaString(horaRespawnNaoFormatada) +
+                "\nCoordenadas: " + listaMvp.getLista().get(idMvp).coordenadasTumulo, listaMvp.getLista().get(idMvp).imagem);
         }
 
-        // incluir horário de determinado MVP utilizando CODIGO
-        // %mvp -a HORARIO_MORTE COORDENADAS CODE_MVP
-        if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-A") {
-            if (!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[2])) {
-                msg.channel.send("O horário deve ser válido e no formato HH:mm");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
+        // incluir mvp por id ou nome
+        if (msg.content.startsWith(prefix) + "mvp" && (args[1] === "-a" || args[1] === "-A")) {
+            let idMvp;
+            if (!/^(0[1-9]|[12]\d|3[01])$/.test(args[2])) {
+                msg.channel.send("Informar uma data válida 01-31");
                 return;
             }
-            if (!/^\d{1,4}\/\d{1,4}$/.test(args[3])) {
-                msg.channel.send("Informar uma coordenada válida xxxx/yyyy");
-                msg.channel.send("%mvp -a CODE_MVP HORARIO_MORTE COORDENADAS");
-            }
-            listaMvp.get(args[4]).horaMinutoMorte = new Date("2020-01-01T" + args[2] + ":00.000");
-            listaMvp.get(args[4]).coordenadasTumulo = args[3];
-            msg.channel.send("Horário adicionado com sucesso");
-        }
-
-        // incluir horário de determinado MVP utilizando nome
-        // %mvp -a HORARIO_MORTE COORDENADAS NOME_MVP
-        if (msg.content.startsWith(prefix) + "mvp" && args[1] === "-a") {
-            if (!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[2])) {
+            if (!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[3])) {
                 msg.channel.send("O horário deve ser válido e no formato hh:mm");
                 return;
             }
-            if (!/^\d{1,4}\/\d{1,4}$/.test(args[3])) {
+            if (!/^\d{1,4}\/\d{1,4}$/.test(args[4])) {
                 msg.channel.send("A coordenada deve ser válida e no formato x/y");
-            }
-            idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 4), listaMvp);
-            if (!idMvp || idMvp === '') {
-                msg.channel.send("Encontrei nada não com esse nome.");
                 return;
             }
-            listaMvp.get(idMvp).horaMinutoMorte = new Date("2020-01-01T" + args[2] + ":00.000");
-            listaMvp.get(idMvp).coordenadasTumulo = args[3];
+            if (args[1] === "-a") {
+                idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 5), listaMvp.getLista());
+                if (!idMvp || idMvp === '') {
+                    msg.channel.send("MVP não existe na base");
+                    return;
+                }
+            }
+            if (args[1] === "-A"){
+                idMvp = args[5];
+                if(!listaMvp.get(idMvp)){
+                    msg.channel.send("MVP não existe na base");
+                    return;
+                }
+            }
+            listaMvp.getLista().get(idMvp).horaMinutoMorte = new Date("2020-01-" + args[2] + "T" + args[3] + ":00.000");
+            listaMvp.getLista().get(idMvp).coordenadasTumulo = args[4];
             msg.channel.send("Horário adicionado com sucesso");
         }
     }
@@ -148,21 +139,22 @@ bot.on('message', (msg) => {
     * comandos sem argumentos
     * **********************/
     if (msg.content.startsWith(prefix + "resetar")) {
-        listaMvp = new cacete().retornaLista();
+        listaMvp.gerarLista();
         msg.channel.send("Lista resetada");
     }
 
-    // lista todas as entradas ( Comando %horario )
+    // lista todas as entradas
     if (msg.content.startsWith(prefix + "horarios")) {
         let contagem = 0;
 
-        listaMvp.forEach(function (value, key) {
+        listaMvp.getLista().forEach(function (value, key) {
             if (value.horaMinutoMorte) {
                 contagem++;
+                let horaRespawnNaoFormatada = new mvpTrackerUtil().calcularRespawn(value.horaMinutoMorte, value.tempoDeRespawn);
                 msg.channel.send(value.nomeMvp + "\n" +
-                    "> Mapa: " + value.mapa + ", Respawn: " + new mvpTrackerUtil().calcularRespawn(value.horaMinutoMorte, value.tempoDeRespawn));
+                    "> Mapa: " + value.mapa + ", Respawn: " + new mvpTrackerUtil().converterHoraParaString(horaRespawnNaoFormatada));
             }
-        }, listaMvp);
+        }, listaMvp.getLista());
         if (contagem === 0) msg.channel.send("Não existem horários cadastrados.");
     }
 
@@ -175,11 +167,9 @@ bot.on('message', (msg) => {
     }
 });
 
-/*
-*******************
+/* *******************
 * EASTER EGGS
-* *****************
-*/
+* ***************** */
 bot.on('message', msg => {
     if (msg.author.bot) return;
     if (msg.content === "safadinho") {
@@ -197,12 +187,6 @@ bot.on('message', msg => {
     if (msg.content === "sarrada") {
         const attachment4 = new MessageAttachment('./images/aesir_gifs/sarrada.gif');
         msg.channel.send(attachment4);
-    }
-});
-
-bot.on('message', msg => {
-    if (msg.content === "testando") {
-        msg.reply(new msgUtil(bot).aura());
     }
     if (msg.content === "o que a aesir mais gosta?") {
         msg.reply('Duwãfufaito!!!' + " " + new generalUtil(bot).emoji("709561477324865603") + " " + new generalUtil(bot).emoji("709555094227779624"));
@@ -222,4 +206,4 @@ bot.on('message', msg => {
     if (msg.content === "300") {
         msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji('709808464414900324'));
     }
-});      
+});

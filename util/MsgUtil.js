@@ -4,7 +4,6 @@ class MsgUtil {
 
     constructor(bot) {
         this.bot = bot;
-        console.log(this.bot.emojis);
     }
 
     help() {
