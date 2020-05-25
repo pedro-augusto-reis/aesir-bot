@@ -1,7 +1,4 @@
-const {Client, MessageAttachment, RichEmbed} = require('discord.js');
-const bot = new Client();
-
-class GeneralUtil{
+class GeneralUtil {
 
     bot;
 
@@ -10,11 +7,12 @@ class GeneralUtil{
     }
 
     emoji(id) {
-        //try{
+        try {
             return this.bot.emojis.cache.get(id).toString();
-       // }catch(ex){
-       //     return "Emoji não encontrado.";
-      //  }
+        } catch (ex) {
+            return null;
+        }
     }
 }
+
 module.exports = GeneralUtil;
