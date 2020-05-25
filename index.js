@@ -16,11 +16,12 @@ const {Client, MessageAttachment, RichEmbed} = require('discord.js');
 listaInit = require('./domain/MvpTrackerLista');
 mvpTrackerUtil = require('./util/MvpTrackerUtil');
 generalUtil = require('./util/GeneralUtil');
+msgUtil = require('./util/MsgUtil');
 
 
 // config bot
 const bot = new Client();
-bot.login("Insira o Token aqui");
+bot.login("NzEyODY0NzgxMDk4NDE4Mjc2.XsrssQ.-7wzlukK0u8phupSBsE4Pso3WEE");
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
@@ -171,9 +172,8 @@ bot.on('message', (msg) => {
 
     // help
     if (msg.content.startsWith(prefix + "help")) {
-        fs.readFile ("./util/help.txt", "utf8", function(err, data){
-            msg.author.send(data)
-        })
+        var foda = new msgUtil(bot)
+        msg.channel.send(foda.aura())
     }
 });
 
@@ -211,7 +211,7 @@ bot.on('message', msg=>{
         msg.reply('Vai farmar fdp!!' + " " + new generalUtil(bot).emoji( "709561478205931662" ));
     }
     if (msg.content === "me beija") {
-        msg.reply('Awh!' + " " + new generalUtil(bot).emojis( "709544168594341928" ));
+        msg.reply('Awh!' + " " + new generalUtil(bot).emoji( "709544168594341928" ));
     }
     if (msg.content === "1%") {
         msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil(bot).emoji( "709561477165613114" ));
