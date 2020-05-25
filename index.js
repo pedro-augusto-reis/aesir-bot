@@ -12,7 +12,7 @@
 * */
 
 // imports
-const {Client, MessageAttachment, RichEmbed} = require('discord.js');
+const {Client, MessageAttachment, RichEmbed, Discord} = require('discord.js');
 listaInit = require('./domain/MvpTrackerLista');
 mvpTrackerUtil = require('./util/MvpTrackerUtil');
 generalUtil = require('./util/GeneralUtil');
@@ -171,7 +171,7 @@ bot.on('message', (msg) => {
     }
 
     if (msg.content.startsWith(prefix + "help")) {
-        msg.author.send(new msgUtil(bot).help())
+        msg.channel.send(new msgUtil(bot).help())
     }
 });
 
@@ -222,4 +222,70 @@ bot.on('message', msg => {
     if (msg.content === "300") {
         msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji('709808464414900324'));
     }
-});      
+});
+
+
+
+const exampleEmbed = {
+	color: 0x7ac2fe,
+    title: 'Dicionário de Comandos',
+    url: 'https://github.com/pedro-augusto-reis/aesir-bot/blob/master/README.md',
+    description: '**Parâmetros de Entrada**' + 
+    "\n**Hora da morte:** hh:mm"+
+    "\n**Coordenadas:** x/y"+
+    "\n**Nome ou id**" + 
+    '\n**Exemplos estão disponíveis clickando no título desse dicionário**',
+	thumbnail: {
+        url: 'attachment://MVP.png'
+    },
+	fields: [
+        { 
+        name: '**Adicionar horário de um MVP**',
+        value: '**%mvp -a *hh:mm* *x/y* *nome do MVP* \n\n %mvp -A *hh:mm* *x/y* *código do MVP***',
+        inline: false,
+        },
+        { 
+        name: '**Pesquisar um MVP específico**',
+        value: '**%mvp -p *nome do MVP* \n\n %mvp -P *código do MVP***',
+        inline: false,
+        },
+		{
+        name: '**Lista todos MVPs informando Nome, Mapa, Horário de Respawn**',
+        value: '**%horarios**',
+        inline: false,
+        },
+		{
+        name: '**Limpa a lista de horários dos MVPs**',
+        value: '**%resetar**',
+        inline: false,
+        },
+        {
+        name: '**Lista os MVPs com aura verde**',
+        value: '**%aura**',
+        inline: false,
+        },
+    ],
+	image: {
+        url: 'attachment://omg.gif',
+    },
+	footer: {
+        text: 'Tutz e Yaerius',
+        icon_url: 'https://i.imgur.com/SfzjpJI.png',
+    }
+}
+    
+bot.on('message', msg => {
+    if (msg.content === "%teste") {
+        msg.channel.send({
+            embed: exampleEmbed,
+            files: [{
+                attachment: 'images/ragnarok_gifs/MVP.png',
+                name: 'MVP.png'
+            },
+            {
+                attachment: 'images/ragnarok_gifs/Omg.gif',
+                name: 'omg.gif'
+            }]
+        });
+    }
+});
