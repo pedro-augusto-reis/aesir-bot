@@ -16,11 +16,15 @@ const {Client, MessageAttachment, RichEmbed} = require('discord.js');
 listaInit = require('./domain/MvpTrackerLista');
 mvpTrackerUtil = require('./util/MvpTrackerUtil');
 generalUtil = require('./util/GeneralUtil');
+msgUtil = require('./util/MsgUtil');
+var propertiesReader = require('properties-reader');
 
+// carregar arquivos propriedades
+var properties = propertiesReader('properties');
 
 // config bot
 const bot = new Client();
-bot.login("Insira o Token aqui");
+bot.login(properties.get('bot.token'));
 const prefix = '%';
 var listaMvp;
 const fs = require('fs')
@@ -45,16 +49,16 @@ bot.on('message', (msg) => {
     * *****************
     */
     if (msg.content.startsWith(prefix + "clear")) {
-       
+
         // comando clear
-        if (msg.member.roles.cache.has('365245891449192449')){
+        if (msg.member.roles.cache.has('365245891449192449')) {
             if (!args[1]) return msg.reply('Quantas mensagens, seu burro?');
             (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
         } else {
             msg.reply('tu é bobo, é?!')
         }
     }
-           
+
 
     /*
     *******************
@@ -140,9 +144,9 @@ bot.on('message', (msg) => {
         }
     }
 
-    /*
+    /* **********************
     * comandos sem argumentos
-    */
+    * **********************/
     if (msg.content.startsWith(prefix + "resetar")) {
         listaMvp = new cacete().retornaLista();
         msg.channel.send("Lista resetada");
@@ -163,31 +167,24 @@ bot.on('message', (msg) => {
     }
 
     if (msg.content.startsWith(prefix + "aura")) {
-        fs.readFile ("./util/aura.txt", "utf8", function(err, data){
-            msg.channel.send(data);
-        })
-        
+        msg.reply(new msgUtil(bot).aura());
     }
 
-    // help
     if (msg.content.startsWith(prefix + "help")) {
-        fs.readFile ("./util/help.txt", "utf8", function(err, data){
-            msg.author.send(data)
-        })
+        msg.author.send(new msgUtil(bot).help())
     }
 });
 
-    /*
-    *******************
-    * EASTER EGGS
-    * *****************
-    */
-
-bot.on('message', msg=>{
+/*
+*******************
+* EASTER EGGS
+* *****************
+*/
+bot.on('message', msg => {
     if (msg.author.bot) return;
     if (msg.content === "safadinho") {
         const attachment1 = new MessageAttachment('./images/aesir_gifs/safadinho.gif');
-         msg.channel.send(attachment1);
+        msg.channel.send(attachment1);
     }
     if (msg.content === "acorda") {
         const attachment2 = new MessageAttachment('./images/aesir_gifs/acorda.gif');
@@ -203,23 +200,26 @@ bot.on('message', msg=>{
     }
 });
 
-bot.on('message', msg=>{
+bot.on('message', msg => {
+    if (msg.content === "testando") {
+        msg.reply(new msgUtil(bot).aura());
+    }
     if (msg.content === "o que a aesir mais gosta?") {
-        msg.reply('Duwãfufaito!!!' + " " + new generalUtil(bot).emoji( "709561477324865603" ) + " " + new generalUtil(bot).emoji( "709555094227779624" ));
+        msg.reply('Duwãfufaito!!!' + " " + new generalUtil(bot).emoji("709561477324865603") + " " + new generalUtil(bot).emoji("709555094227779624"));
     }
     if (msg.content === "que preguiça") {
-        msg.reply('Vai farmar fdp!!' + " " + new generalUtil(bot).emoji( "709561478205931662" ));
+        msg.reply('Vai farmar fdp!!' + " " + new generalUtil(bot).emoji("709561478205931662"));
     }
     if (msg.content === "me beija") {
-        msg.reply('Awh!' + " " + new generalUtil(bot).emojis( "709544168594341928" ));
+        msg.reply('Awh!' + " " + new generalUtil(bot).emojis("709544168594341928"));
     }
     if (msg.content === "1%") {
-        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil(bot).emoji( "709561477165613114" ));
+        msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil(bot).emoji("709561477165613114"));
     }
     if (msg.content === "quantas bsb gastou?") {
-        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil(bot).emoji( '709808464238477445' ));
+        msg.reply('Fala 300... Fala 300...' + " " + new generalUtil(bot).emoji('709808464238477445'));
     }
     if (msg.content === "300") {
-        msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji( '709808464414900324' ));
+        msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji('709808464414900324'));
     }
 });      
