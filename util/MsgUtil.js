@@ -1,24 +1,28 @@
 class MsgUtil {
 
     bot;
+    MessageAttachment;
+    new;
 
-    constructor(bot) {
+    constructor(bot, MessageAttachment) {
         this.bot = bot;
+        this.MessageAttachment = MessageAttachment;
     }
 
     help() {
         let emojiAesir = new generalUtil(this.bot).emoji("709546703132426322");
-        return "\n" + emojiAesir + " **DICIONÁRIO DE COMANDOS** " + emojiAesir +
-            "\n**Adicionar horário MVP** - parâmetros de entrada: hora morte, coordenadas, nome ou id" +
-            "\n> %mvp -a hh:mm x/y nome-mvp" +
-            "\n> %mvp -A hh:mm x/y código-mvp" +
-            "\n**Pesquisar MVP específico** - parâmetros de entrada: nome ou id" +
-            "\n> %mvp -p nome-mvp" +
-            "\n> %mvp -P código-mvp" +
-            "\n**Comandos Gerais**" +
-            "\n> %resetar  Limpa a lista e todas as entradas dos Mvps" +
-            "\n> %horarios Lista todos Mvps, informando Nome, Mapa, Horário de Respawn" +
-            "\n> %aura     MVPs com aura verde";
+        let emojiMVP = new this.MessageAttachment('../images/ragnarok_gifs/MVP.png');
+        return emojiAesir + " **DICIONÁRIO DE COMANDOS** " + emojiAesir + 
+            "\n \n **Adicionar horário de um MVP**" + "- parâmetros de entrada: hora da morte, coordenadas, nome ou id" +
+            "\n \n> %mvp -a *hh:mm* *x/y* *nome do mvp*" +
+            "\n> %mvp -A *hh:mm* *x/y* *código do mvp*" +
+            "\n \n **Pesquisar um MVP específico** - parâmetros de entrada: nome ou id" +
+            "\n \n> %mvp -p *nome do mvp*" +
+            "\n> %mvp -P *código do mvp*" +
+            "\n \n**Comandos Gerais**" +
+            "\n \n> %horarios **Lista todos Mvps informando Nome, Mapa, Horário de Respawn**" +
+            "\n> %resetar  **Limpa a lista de horários dos Mvps**" +
+            "\n> %aura     **Lista os MVPs com aura verde**";
     }
 
     aura() {
