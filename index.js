@@ -52,10 +52,10 @@ bot.on('message', (msg) => {
 
         // comando clear
         if (msg.member.roles.cache.has('365245891449192449')) {
-            if (!args[1]) return msg.reply('Quantas mensagens, seu burro? ' +  + new generalUtil(bot).emoji("709544275842564126"));
+            if (!args[1]) return msg.reply('Quantas mensagens, seu burro? ' + new generalUtil(bot).emoji( "709544275842564126" ));
             (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
         } else {
-            msg.reply('tu é bobo, é?! ' +  + new generalUtil(bot).emoji("709808465123475477"))
+            msg.reply('tu é bobo, é?! ' + new generalUtil(bot).emoji( "709808465123475477" ))
         }
     }
 
