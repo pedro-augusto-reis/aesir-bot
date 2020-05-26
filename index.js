@@ -24,7 +24,7 @@ const timeChecker = require('./service/TimeChecker')
 var properties = propertiesReader('properties');
 
 // config bot
-const bot = new Client();
+const bot = new Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"]});
 bot.login(properties.get('bot.token'));
 const prefix = '%';
 
@@ -55,10 +55,10 @@ bot.on('message', (msg) => {
     if (msg.content.startsWith(prefix + "clear")) {
         // comando clear
         if (msg.member.roles.cache.has(properties.get('bot.id.role.odin').replace(/'/g, '').trim())) {
-            if (!args[1]) return msg.reply('Quantas mensagens, seu burro?');
+            if (!args[1]) return msg.reply('Quantas mensagens, seu burro? <:whymario:709544275842564126>');
             (args[1] > 20) ? msg.channel.bulkDelete(20) : msg.channel.bulkDelete(args[1]);
         } else {
-            msg.reply('tu é bobo, é?!')
+            msg.reply('tu é bobo, é?! <:lookguy:709808465123475477>')
         }
     }
 
@@ -75,20 +75,20 @@ bot.on('message', (msg) => {
         if(msg.content.startsWith(prefix + "mvp") && (args[1] === "-p" || args[1] === "-P")){
             let idMvp;
             if(!args[2]){
-                msg.channel.send("Informar uma ID ou nome do MVP");
+                msg.channel.send("Informe a ID ou o nome do MVP <:whylink:709543789672529982>");
                 return;
             }
             if(args[1] === "-P"){
                 idMvp = args[2];
                 if(!listaMvp.getLista().get(idMvp)){
-                    msg.channel.send("MVP não encontrado na base");
+                    msg.channel.send("Não encontramos esse MVP na base <:hmm:714561399816192081>");
                     return;
                 }
             }
             if(args[1] === "-p"){
                 idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 2), listaMvp.getLista());
                 if (!idMvp || idMvp === '') {
-                    msg.channel.send("MVP não encontrado na base");
+                    msg.channel.send("Não encontramos esse MVP na base <:hmm:714561399816192081>");
                     return;
                 }
             }
@@ -104,34 +104,34 @@ bot.on('message', (msg) => {
         if (msg.content.startsWith(prefix) + "mvp" && (args[1] === "-a" || args[1] === "-A")) {
             let idMvp;
             if (!/^(0[1-9]|[12]\d|3[01])$/.test(args[2])) {
-                msg.channel.send("Informar uma data válida 01-31");
+                msg.channel.send("Informar uma data válida entre 01 e 31 <:pif:709554909585997884>");
                 return;
             }
             if (!/^([0-1]?[0-9]|2[0-4]):[0-5][0-9]$/.test(args[3])) {
-                msg.channel.send("O horário deve ser válido e no formato hh:mm");
+                msg.channel.send("O horário deve ser válido e no formato hh:mm <:pif:709554909585997884>");
                 return;
             }
             if (!/^\d{1,4}\/\d{1,4}$/.test(args[4])) {
-                msg.channel.send("A coordenada deve ser válida e no formato x/y");
+                msg.channel.send("A coordenada deve ser válida e no formato x/y <:pif:709554909585997884>");
                 return;
             }
             if (args[1] === "-a") {
                 idMvp = new mvpTrackerUtil().pesquisarMvpPorNome(new mvpTrackerUtil().construirNomeMvp(args, 5), listaMvp.getLista());
                 if (!idMvp || idMvp === '') {
-                    msg.channel.send("MVP não existe na base");
+                    msg.channel.send("Esse MVP não existe na base <:yikesUE:709808464636936482>");
                     return;
                 }
             }
             if (args[1] === "-A"){
                 idMvp = args[5];
                 if(!listaMvp.get(idMvp)){
-                    msg.channel.send("MVP não existe na base");
+                    msg.channel.send("Esse MVP não existe na base <:yikesUE:709808464636936482>");
                     return;
                 }
             }
             listaMvp.getLista().get(idMvp).horaMinutoMorte = new Date("2020-01-" + args[2] + "T" + args[3] + ":00.000");
             listaMvp.getLista().get(idMvp).coordenadasTumulo = args[4];
-            msg.channel.send("Horário adicionado com sucesso");
+            msg.channel.send("Horário adicionado com sucesso <:babyfist:709808463462793340>");
         }
     }
 
@@ -140,7 +140,7 @@ bot.on('message', (msg) => {
     * **********************/
     if (msg.content.startsWith(prefix + "resetar")) {
         listaMvp.gerarLista();
-        msg.channel.send("Lista resetada");
+        msg.channel.send("Lista resetada <:meh:709554743109877760>");
     }
 
     // lista todas as entradas
@@ -155,7 +155,7 @@ bot.on('message', (msg) => {
                     "> Mapa: " + value.mapa + ", Respawn: " + new mvpTrackerUtil().converterHoraParaString(horaRespawnNaoFormatada));
             }
         }, listaMvp.getLista());
-        if (contagem === 0) msg.channel.send("Não existem horários cadastrados.");
+        if (contagem === 0) msg.channel.send("Não existem horários cadastrados. <:sOb:709554981916639282>");
     }
 
     if (msg.content.startsWith(prefix + "aura")) {
@@ -163,7 +163,16 @@ bot.on('message', (msg) => {
     }
 
     if (msg.content.startsWith(prefix + "help")) {
-        msg.author.send(new msgUtil(bot).help())
+        msg.author.send({
+            embed: new msgUtil(bot).help(),
+            files: [{
+                attachment: 'images/ragnarok_gifs/MVP.png',
+                name: 'MVP.png'
+            },
+            {
+                attachment: 'images/ragnarok_gifs/help.gif',
+                name: 'help.gif'
+            }]});
     }
 });
 
@@ -188,6 +197,10 @@ bot.on('message', msg => {
         const attachment4 = new MessageAttachment('./images/aesir_gifs/sarrada.gif');
         msg.channel.send(attachment4);
     }
+    if (msg.content === "duwafufaito") {
+        const attachment5 = new MessageAttachment('./images/aesir_gifs/duwafufaito.gif');
+        msg.channel.send(attachment5);
+    }
     if (msg.content === "o que a aesir mais gosta?") {
         msg.reply('Duwãfufaito!!!' + " " + new generalUtil(bot).emoji("709561477324865603") + " " + new generalUtil(bot).emoji("709555094227779624"));
     }
@@ -195,7 +208,7 @@ bot.on('message', msg => {
         msg.reply('Vai farmar fdp!!' + " " + new generalUtil(bot).emoji("709561478205931662"));
     }
     if (msg.content === "me beija") {
-        msg.reply('Awh!' + " " + new generalUtil(bot).emojis("709544168594341928"));
+        msg.reply('Awh!' + " " + new generalUtil(bot).emoji("709544168594341928"));
     }
     if (msg.content === "1%") {
         msg.channel.send("Oloko" + " " + msg.author.username + ', mas 1% é bom demais!' + " " + new generalUtil(bot).emoji("709561477165613114"));
@@ -207,3 +220,9 @@ bot.on('message', msg => {
         msg.reply('Um pouco mais...' + " " + new generalUtil(bot).emoji('709808464414900324'));
     }
 });
+
+    
+    
+    
+
+                

@@ -31,24 +31,24 @@ class TimeChecker {
                     horarioLimparMvp.setMinutes(horarioFinal.getMinutes() + tempoLimparMvp);
 
                     if(horaAtual.getTime() === horarioInicial.getTime()){
-                        bot.channels.cache.get(ajustarValorIdCanal).send("\nVai matar o MVP vagabundo! Ele vai nascer em " + intervaloTempoAviso + " minuto(s)." +
-                            "\nNome: " + value.nomeMvp +
-                            "\nMapa: " + value.mapa +
-                            "\nCoordenada do túmulo: " + value.coordenadasTumulo, value.imagem);
-                    }
+                        bot.channels.cache.get(ajustarValorIdCanal).send("\n**Vai matar o MVP, arrombado! Ele vai nascer em** " + intervaloTempoAviso + " **minuto(s).**" +
+                            "\n**Nome:** " + value.nomeMvp +
+                            "\n**Mapa:** " + value.mapa +
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
+                    } 
 
                     if(horaAtual.getTime() === horaRespawnMvp.getTime()){
-                        bot.channels.cache.get(ajustarValorIdCanal).send("\nVai matar o MVP! Ele está para nascer." +
-                            "\nNome: " + value.nomeMvp +
-                            "\nMapa: " + value.mapa +
-                            "\nCoordenada do túmulo: " + value.coordenadasTumulo, value.imagem);
+                        bot.channels.cache.get(ajustarValorIdCanal).send("\n**Anda logo caralho!! Vai matar o MVP! Ele está para nascer.**" +
+                            "\n**Nome: **" + value.nomeMvp +
+                            "\n**Mapa:** " + value.mapa +
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
                     }
 
                     if(horaAtual.getTime() === horarioFinal.getTime()){
-                        bot.channels.cache.get(ajustarValorIdCanal).send("\nVai matar o MVP! Se ninguém tiver matado é teu." +
+                        bot.channels.cache.get(ajustarValorIdCanal).send("\n**Já deve ter nascido o MVP! Vai logo matar essa merda.**" +
                             "\nNome: " + value.nomeMvp +
                             "\nMapa: " + value.mapa +
-                            "\nCoordenada do túmulo: " + value.coordenadasTumulo, value.imagem);
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
                     }
 
                     if(horaAtual.getTime() === horarioLimparMvp.getTime()){
