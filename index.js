@@ -25,7 +25,8 @@ var properties = propertiesReader('properties');
 
 // config bot
 const bot = new Client();
-bot.login(properties.get('bot.token'));
+// bot.login(properties.get('bot.token'));
+bot.login(process.env.BOT_TOKEN);
 const prefix = '%';
 
 // lista MVPs
