@@ -6,11 +6,3 @@ bot.id.role.odin = '365245891449192449'
 bot.message.delete.tracker = 300000
 bot.message.delete.geral = 10000
 bot.message.delete.horarios = 60000
-
-bot.message.emoji.aesirGosta01 = 709561477324865603
-bot.message.emoji.aesirGosta02 = 709555094227779624
-bot.message.emoji.preguica = 709561478205931662
-bot.message.emoji.meBeija = 709544168594341928
-bot.message.emoji.umPorcento = 709561477165613114
-bot.message.emoji.quantasBsbGastou = 709808464238477445
-bot.message.emoji.trezendos = 709808464414900324
