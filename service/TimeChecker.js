@@ -7,6 +7,7 @@ const properties = propertiesReader('properties');
 const intervaloTempoAviso = properties.get('bot.time.checker.intervalo');
 const tempoLimparMvp = properties.get('bot.time.checker.limpar.mvp');
 const ajustarValorIdCanal = properties.get('bot.id.canal.monitoramento.mvp').replace(/'/g, '').trim();
+const deletarMensagemTracker = properties.get('bot.message.delete.tracker');
 
 class TimeChecker {
 
@@ -30,28 +31,34 @@ class TimeChecker {
                     horarioFinal.setMinutes(horarioFinal.getMinutes() + intervaloTempoAviso);
                     horarioLimparMvp.setMinutes(horarioFinal.getMinutes() + tempoLimparMvp);
 
-                    if(horaAtual.getTime() === horarioInicial.getTime()){
+                    if (horaAtual.getTime() === horarioInicial.getTime()) {
                         bot.channels.cache.get(ajustarValorIdCanal).send("\n**Vai matar o MVP, arrombado! Ele vai nascer em** " + intervaloTempoAviso + " **minuto(s).**" +
-                            "\n**Nome:** " + value.nomeMvp +
-                            "\n**Mapa:** " + value.mapa +
-                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
-                    } 
-
-                    if(horaAtual.getTime() === horaRespawnMvp.getTime()){
-                        bot.channels.cache.get(ajustarValorIdCanal).send("\n**Anda logo caralho!! Vai matar o MVP! Ele está para nascer.**" +
-                            "\n**Nome: **" + value.nomeMvp +
-                            "\n**Mapa:** " + value.mapa +
-                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
+                            "\nNome: " + value.nomeMvp +
+                            "\nMapa: " + value.mapa +
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem).then(msg => {
+                            msg.delete({timeout: deletarMensagemTracker});
+                        }).catch(console.error);
                     }
 
-                    if(horaAtual.getTime() === horarioFinal.getTime()){
+                    if (horaAtual.getTime() === horaRespawnMvp.getTime()) {
+                        bot.channels.cache.get(ajustarValorIdCanal).send("\n**Anda logo caralho!! Vai matar o MVP! Ele está para nascer.**" +
+                            "\nNome: " + value.nomeMvp +
+                            "\nMapa: " + value.mapa +
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem).then(msg => {
+                            msg.delete({timeout: deletarMensagemTracker});
+                        }).catch(console.error);
+                    }
+
+                    if (horaAtual.getTime() === horarioFinal.getTime()) {
                         bot.channels.cache.get(ajustarValorIdCanal).send("\n**Já deve ter nascido o MVP! Vai logo matar essa merda.**" +
                             "\nNome: " + value.nomeMvp +
                             "\nMapa: " + value.mapa +
-                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem);
+                            "\n**Coordenada do túmulo:** /navi "+ value.mapa + " " + value.coordenadasTumulo, value.imagem).then(msg => {
+                            msg.delete({timeout: deletarMensagemTracker});
+                        }).catch(console.error);
                     }
 
-                    if(horaAtual.getTime() === horarioLimparMvp.getTime()){
+                    if (horaAtual.getTime() === horarioLimparMvp.getTime()) {
                         index.listaMvp.getLista().get(key).coordenadasTumulo = null;
                         index.listaMvp.getLista().get(key).horaMinutoMorte = null;
                         index.listaMvp.getLista().get(key).diaMorte = null;
@@ -61,4 +68,5 @@ class TimeChecker {
         }, 60 * 1000);
     }
 }
+
 module.exports = TimeChecker;
