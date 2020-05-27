@@ -208,6 +208,11 @@ bot.on('message', (msg) => {
                 name: 'help.gif'
             }]});
     }
+
+    if(msg.content.startsWith(prefix + "time")){
+        let a = new Date();
+        msg.author.send(a.toDateString() + " - " + a.toTimeString());
+    }
 });
 
 /* *******************
