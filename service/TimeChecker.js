@@ -17,6 +17,8 @@ class TimeChecker {
             let horaAtual = new Date();
             let horaRespawnMvp = new Date();
 
+            console.log(horaAtual);
+
             index.listaMvp.getLista().forEach(function (value, key) {
                 if (value.horaMinutoMorte) {
 
