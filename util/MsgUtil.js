@@ -14,7 +14,7 @@ class MsgUtil {
         title: 'Dicionário de Comandos',
         url: 'https://github.com/pedro-augusto-reis/aesir-bot/blob/master/README.md',
         description: '**Parâmetros de Entrada**' +
-        "\n**°Dia da morte:** *dd (necessita ter dois algarismos)*"+ 
+        "\n**°Dia da morte:** *d ou dd*"+
         "\n**°Hora da morte:** *hh:mm*"+
         "\n**°Coordenadas:** *x/y*"+
         "\n***°Nome ou id***" + 
@@ -25,7 +25,7 @@ class MsgUtil {
         fields: [
             { 
             name: '**Adicionar horário de um MVP**',
-            value: '**%mvp -a **dd** *hh:mm* *x/y* *nome do MVP* \n\n %mvp -A **dd** *hh:mm* *x/y* *código do MVP***',
+            value: '**%mvp -a **ddia* *hh:mm* *x/y* *nome do MVP* \n\n %mvp -A **dia** *hh:mm* *x/y* *código do MVP***',
             inline: false,
             },
             { 
