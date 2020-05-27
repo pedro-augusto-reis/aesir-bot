@@ -220,7 +220,7 @@ bot.on('message', (msg) => {
 * ***************** */
 bot.on('message', msg => {
     if (msg.author.bot) return;
-    if (msg.content === "safadinho") {
+    if (msg.content === "loli") {
         const attachment1 = new MessageAttachment('./images/aesir_gifs/safadinho.gif');
         msg.channel.send(attachment1);
         return;
