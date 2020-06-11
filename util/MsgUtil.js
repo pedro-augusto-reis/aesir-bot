@@ -65,22 +65,22 @@ class MsgUtil {
 
     aura() {
         return "\n**MVPS de Aura Verde**,\n" +
-            "> ° Amon Ra - Pyramid F6 (entrada no meio do mapa)\n" +
-            "> ° Amon Ra - Pyramid F6 (entrada no meio do mapa)\n" +
-            "> ° Vesper - Juperos 3 (Quest)\n" +
-            "> ° Atroce - Rachel desce| Rachel desce esq| Ice dun desce desce| Ice dun desce desce direita\n" +
-            "> ° Bacsojin - Louyang dun 3\n" +
-            "> ° Boitata - Brasilis dun 2\n" +
-            "> ° Doppelganger - Gef dun 03\n" +
-            "> ° Dracula - Gef dun 02\n" +
-            "> ° Drake - Sunken Ship 2\n" +
-            "> ° Venomous Chimera - Instances Heart Hunter War Base\n" +
-            "> ° Eddga - Payon Direita Desce Direita\n" +
-            "> ° Evil Snake Lord - Goryun Dun 3\n" +
-            "> ° Baphomet - Hidden Dun 3\n" +
-            "> ° Dark Lord - GH chyard\n" +
-            "> ° R48-85-BESTIA - Rufus";
+        "> ° Amon Ra - Pyramid F6 (entrada no meio do mapa)\n" +
+        "> ° Vesper - Juperos 3 (Quest)\n" +
+        "> ° Atroce - Rachel desce| Rachel desce esq| Ice dun desce desce| Ice dun desce desce direita\n" +
+        "> ° Bacsojin - Louyang dun 3\n" +
+        "> ° Boitata - Brasilis dun 2\n" +
+        "> ° Doppelganger - Gef dun 03\n" +
+        "> ° Dracula - Gef dun 02\n" +
+        "> ° Drake - Sunken Ship 2\n" +
+        "> ° Venomous Chimera - Instances Heart Hunter War Base\n" +
+        "> ° Eddga - Payon Direita Desce Direita\n" +
+        "> ° Evil Snake Lord - Goryun Dun 3\n" +
+        "> ° Baphomet - Hidden Dun 3\n" +
+        "> ° Dark Lord - GH chyard\n" +
+        "> ° R48-85-BESTIA - Rufus";
     }
 }
 
 module.exports = MsgUtil;
+           

@@ -28,7 +28,7 @@ class ListaMvp {
 
     gerarLista() {
         mvpTrackerLista = new Map();
-        mvpTrackerLista.set("1511", new mvp(" **Amon Ra** ", null, null, "moc_pryd06", null, 120, null, attachmentAmonRa));
+        mvpTrackerLista.set("1511", new mvp(" **Amon Ra** ", null, null, "moc_pryd06", null, 60, null, attachmentAmonRa));
         mvpTrackerLista.set("1785", new mvp(" **Atroce** ", null, null, "ve_fild02", null, 360, null, attachmentAtroce));
         mvpTrackerLista.set('1039', new mvp(' **Baphomet** ', null, null, 'prt_maze03', null, 120, null, attachmentBaphomet));
         mvpTrackerLista.set('2068', new mvp(' **Boitata** ', null, null, 'bra_dun02', null, 120, null, attachmentBoitata));
