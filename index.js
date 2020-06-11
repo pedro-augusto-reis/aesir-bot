@@ -13,7 +13,6 @@
 const {Client, MessageAttachment} = require('discord.js');
 const listaMvpObject = require('./domain/MvpTrackerLista');
 const mvpTrackerUtil = require('./util/MvpTrackerUtil');
-const generalUtil = require('./util/GeneralUtil');
 const msgUtil = require('./util/MsgUtil');
 const propertiesReader = require('properties-reader');
 const timeChecker = require('./service/TimeChecker');
@@ -114,8 +113,8 @@ bot.on('message', (msg) => {
         // incluir mvp por id ou nome
         if (msg.content.startsWith(prefix) + "mvp" && (args[1] === "-a" || args[1] === "-A")) {
             let idMvp;
-            if (!/^(0[1-9]|[12]\d|3[01])$/.test(args[2])) {
-                msg.channel.send("Informe uma data válida entre 01 e 31 <:pif:709554909585997884>").then(msg => {
+            if (!/^([1-9]|0[1-9]|[12]\d|3[01])$/.test(args[2])) {
+                msg.channel.send("Informe uma data válida entre 1 e 31 <:pif:709554909585997884>").then(msg => {
                     msg.delete({timeout: deletarMensagemGeral});
                 }).catch(console.error);
                 return;
@@ -209,6 +208,11 @@ bot.on('message', (msg) => {
                 name: 'help.gif'
             }]});
     }
+
+    if(msg.content.startsWith(prefix + "time")){
+        let a = new Date();
+        msg.author.send(a.toDateString() + " - " + a.toTimeString());
+    }
 });
 
 /* *******************
@@ -216,7 +220,7 @@ bot.on('message', (msg) => {
 * ***************** */
 bot.on('message', msg => {
     if (msg.author.bot) return;
-    if (msg.content === "safadinho") {
+    if (msg.content === "loli") {
         const attachment1 = new MessageAttachment('./images/aesir_gifs/safadinho.gif');
         msg.channel.send(attachment1);
         return;
