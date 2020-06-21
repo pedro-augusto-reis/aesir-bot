@@ -244,6 +244,10 @@ bot.on('message', msg => {
         const attachment5 = new MessageAttachment('./images/aesir_gifs/duwafufaito.gif');
         msg.channel.send(attachment5);
     }
+    if (msg.content === "pterodatilo") {
+        const attachment6 = new MessageAttachment('./images/aesir_gifs/ptero.gif');
+        msg.channel.send(attachment6 + "https://www.xvideos.com/video370047/pterodactyl_dinosaur_spermo_plasmoids" );
+    }
     if (msg.content === "o que a aesir mais gosta?") {
         msg.reply('Duwãfufaito!!! <:orgasmtwitch:709561477324865603> <:durasso:709555094227779624>');
         return;
