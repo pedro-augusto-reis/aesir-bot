@@ -247,6 +247,7 @@ bot.on('message', msg => {
     if (msg.content === "pterodatilo") {
         const attachment6 = new MessageAttachment('./images/aesir_gifs/ptero.gif');
         msg.channel.send(attachment6);
+        msg.channel.send("https://bit.ly/3elpnaz")
     }
     if (msg.content === "o que a aesir mais gosta?") {
         msg.reply('Duwãfufaito!!! <:orgasmtwitch:709561477324865603> <:durasso:709555094227779624>');
